@@ -22,7 +22,8 @@ const App = () => {
         Object.keys(obj).map(key => {
           return {
             id: key,
-            name: obj[key].name
+            name: obj[key].name,
+            image: obj[key].image
           };
         })
       );
@@ -44,9 +45,8 @@ const App = () => {
     const beer = beerList.find(beer => beer.id === id);
     if (beer !== undefined) {
       return {
-        id,
+        ...beer,
         name: beer.name,
-        count
       };
     }
   });
@@ -62,7 +62,7 @@ const App = () => {
   return (
     <div className="App">
       <List style={{ color: "black", width: '100%' }}>
-        {beerStatus.map(({id, count, name}) => (
+        {beerStatus.map(({id, count, name, image}) => (
           <ListItem
             key={id}
             style={{ marginBottom: "10px", backgroundColor: "white" }}
@@ -70,7 +70,7 @@ const App = () => {
             <ListItemAvatar>
               <Avatar
                 alt="Drinks"
-                src="https://www.coca-cola.no/content/dam/journey/no/no/Global/products/coca-cola-uten-sukker-595x334.jpg"
+                src={image}
               />
             </ListItemAvatar>
             <ListItemText primary={name} secondary={`Antall: ${count}`} />
