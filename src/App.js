@@ -4,7 +4,9 @@ import {
   ListItem,
   ListItemAvatar,
   Avatar,
-  ListItemText
+  ListItemText,
+  ListItemSecondaryAction,
+  Fab
 } from "@material-ui/core";
 import "./App.css";
 import { database } from "./utils";
@@ -40,19 +42,29 @@ const App = () => {
 
   const beerStatus = fridgeList.map(({ id, count }) => {
     const beer = beerList.find(beer => beer.id === id);
-    return {
-      id,
-      name: beer.name,
-      count
-    };
+    if (beer !== undefined) {
+      return {
+        id,
+        name: beer.name,
+        count
+      };
+    }
   });
+
+  const updateBeerStatus = (status) => {
+    const {event, id, count} = status;
+    event.preventDefault()
+    database.ref('fridge/' + id).set({
+      count,
+    });
+  }
 
   return (
     <div className="App">
-      <List style={{ color: "black" }}>
-        {beerStatus.map(e => (
+      <List style={{ color: "black", width: '100%' }}>
+        {beerStatus.map(({id, count, name}) => (
           <ListItem
-            key={e.id}
+            key={id}
             style={{ marginBottom: "10px", backgroundColor: "white" }}
           >
             <ListItemAvatar>
@@ -61,7 +73,12 @@ const App = () => {
                 src="https://www.coca-cola.no/content/dam/journey/no/no/Global/products/coca-cola-uten-sukker-595x334.jpg"
               />
             </ListItemAvatar>
-            <ListItemText primary={e.name} secondary={`Antall: ${e.count}`} />
+            <ListItemText primary={name} secondary={`Antall: ${count}`} />
+            <ListItemSecondaryAction>
+              <Fab onClick={(event) => updateBeerStatus({event, id, count: count + 1})}>+</Fab>
+              <Fab onClick={(event) => updateBeerStatus({event, id, count: count - 1})}>-</Fab>
+            </ListItemSecondaryAction>
+            
           </ListItem>
         ))}
       </List>
