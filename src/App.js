@@ -46,7 +46,7 @@ const App = () => {
     if (beer !== undefined) {
       return {
         ...beer,
-        name: beer.name,
+        count
       };
     }
   });
